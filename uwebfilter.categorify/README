@@ -1,0 +1,49 @@
+
+=== categorify ===
+
+categorize text
+
+
+    setup
+-------------
+$ python -m venv .venv
+$ source .venv/bin/activate
+$ pip install -r requirements
+
+
+
+    training
+----------------
+first create a training dataset (like the one in `datasets`)
+make sure that the csv file has the same headers!
+
+next run train.py with the dataset
+$ python train.py dataset.csv --name mymodel-v1
+
+this will create the model in the `models` directory
+
+
+
+    inference
+-----------------
+run inference.py giving the model name and the text you want to classify
+$ python inference.py --model models/mymodel-v1.pickle --text 'word1 word2 word3 word4'
+
+optionally write the words to a file and pass in the file
+$ python inference.py --model models/mymodel-v1.pickle --file words
+
+use `--probs` to view the probabilities of each category
+
+
+
+    http server
+-------------------
+server.py contains a FastAPI application
+$ python server.py
+
+this will start an http server listening on `localhost:9005`
+navigate to `localhost:9005/docs` to view swagger documentation
+
+docker image for http server
+$ sh docker-build.sh
+$ sh docker-run.sh
