@@ -2,13 +2,8 @@
 
 get list of uncategorized domains from db
 
-    SELECT hc.domain FROM hitcount hc
-        LEFT JOIN domains d
-        ON hc.domain = d.domain
-        WHERE d.domain IS NULL
-
 scrape & clean contents of website
 
 categorize contents using uwebfilter.categorify
 
-insert into domains_provisional
+insert into domains_provisional / domains_failed
