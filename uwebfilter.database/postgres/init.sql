@@ -36,9 +36,26 @@ CREATE TABLE IF NOT EXISTS domains_provisional (
 	cache_domains TEXT[] NOT NULL DEFAULT '{}'
 );
 
+CREATE TABLE IF NOT EXISTS domains_failed (
+	domain TEXT NOT NULL UNIQUE CHECK (domain <> '')
+);
+
 
 CREATE TABLE IF NOT EXISTS hitcount (
 	_id SERIAL PRIMARY KEY,
 	domain TEXT NOT NULL CHECK (domain <> ''),
 	_datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+CREATE OR REPLACE VIEW view_domains_without_categories AS
+	SELECT hc.domain FROM hitcount hc
+		WHERE hc.domain NOT IN (
+			SELECT domain FROM domains
+			UNION
+			SELECT domain FROM domains_provisional
+			UNION
+			SELECT domain FROM domains_failed
+		)
+		GROUP BY hc.domain
+		ORDER BY COUNT(hc.domain) DESC;
