@@ -1,4 +1,0 @@
-clean up uwebfilter.d
-change uwebfilter.d to be single threaded
-
-create a nice frontend to manage database and config
