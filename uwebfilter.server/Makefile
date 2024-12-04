@@ -16,6 +16,9 @@ release: all
 fmt:
 	go fmt ./**/**
 
+test:
+	go test ./**/**
+
 package:
 	tar czvf src.tar.gz                       \
 	        cmd pkg Makefile go.mod go.sum upx
@@ -24,4 +27,3 @@ docker-image:
 	docker build -t $(DOCKER_IMAGE_NAME) .
 
 docker-all: package docker-image
-
