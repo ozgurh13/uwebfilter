@@ -32,6 +32,7 @@ intended for personal use, but can easily be made production-ready
 
   todo
 --------
+ - [ ] category & application based rate limiting
  - [ ] web interface to easily manage uwebfilterd's config
  - [ ] web interface to easily manage databases
  - [ ] cloud server to collect logs from devices (cloud logging)
