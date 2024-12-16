@@ -16,6 +16,7 @@ int main(int argc, char* argv[])
 
 	const char *config_path = argv[1];
 	config_load(config_path);
+	config_print();
 
 	logger_init(NULL);
 	logger_set_loglevel(LOGLEVEL_DEBUG);

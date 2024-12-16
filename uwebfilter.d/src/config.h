@@ -10,6 +10,11 @@ void config_load(const char* config_path);
 void config_print(void);
 
 const char* config_get_serveraddr(void);
+const char* config_get_cloudlogging_auth(void);
+const char* config_get_cloudlogging_addr(void);
+const char* config_get_cloudlogging_user(void);
+const char* config_get_cloudlogging_pass(void);
+
 
 /*  is the category blocked by user  */
 bool config_is_category_blocked(const int category);

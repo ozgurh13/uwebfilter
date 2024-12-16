@@ -13,6 +13,8 @@
 #define   PATH_LENGTH           1024
 
 #define   SERVERADDR_LENGTH      256
+#define   USERNAME_LENGTH         64
+#define   PASSWORD_LENGTH         64
 
 #define   BLOCKTYPE_NONE           0
 #define   BLOCKTYPE_APPLICATION    1

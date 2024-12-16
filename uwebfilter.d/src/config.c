@@ -60,6 +60,13 @@ static struct {
 	application_t *applications;
 
 	domain_t *domains;
+
+	struct {
+		char auth[SERVERADDR_LENGTH];
+		char addr[SERVERADDR_LENGTH];
+		char user[USERNAME_LENGTH];
+		char pass[PASSWORD_LENGTH];
+	} cloudlogging;
 } config = {
 	.serveraddr = {0},
 
@@ -79,11 +86,33 @@ config_get_serveraddr(void)
 	return config.serveraddr;
 }
 
+const char*
+config_get_cloudlogging_auth(void)
+{
+	return config.cloudlogging.auth;
+}
+const char*
+config_get_cloudlogging_addr(void)
+{
+	return config.cloudlogging.addr;
+}
+const char*
+config_get_cloudlogging_user(void)
+{
+	return config.cloudlogging.user;
+}
+const char*
+config_get_cloudlogging_pass(void)
+{
+	return config.cloudlogging.pass;
+}
+
 
 static void config_load_serveraddr(json_object *j_serveraddr);
 static void config_load_categories(json_object *j_categories);
 static void config_load_applications(json_object *j_applications);
 static void config_load_domains(json_object *j_domains);
+static void config_load_cloudlogging(json_object *j_cloudlogging);
 
 void
 config_load(const char* config_path)
@@ -111,6 +140,10 @@ config_load(const char* config_path)
 
 	config_load_domains(
 		json_object_object_get(root, "domains")
+	);
+
+	config_load_cloudlogging(
+		json_object_object_get(root, "cloudlogging")
 	);
 
 	json_object_put(root);
@@ -232,6 +265,62 @@ config_load_domains(json_object *j_domains)
 	}
 }
 
+static void
+config_load_cloudlogging(json_object *j_cloudlogging)
+{
+	if (j_cloudlogging == NULL) {
+		return;
+	}
+
+	json_object *j_auth = json_object_object_get(j_cloudlogging, "auth");
+	if (j_auth != NULL) {
+		const char* auth = json_object_get_string(j_auth);
+		if (auth != NULL) {
+			size_t length = strlen(auth);
+			if (length > 255) {
+				length = 255;
+			}
+			memcpy(config.cloudlogging.auth, auth, length);
+		}
+	}
+
+	json_object *j_addr = json_object_object_get(j_cloudlogging, "addr");
+	if (j_addr != NULL) {
+		const char* addr = json_object_get_string(j_addr);
+		if (addr != NULL) {
+			size_t length = strlen(addr);
+			if (length > 255) {
+				length = 255;
+			}
+			memcpy(config.cloudlogging.addr, addr, length);
+		}
+	}
+
+	json_object *j_user = json_object_object_get(j_cloudlogging, "user");
+	if (j_user != NULL) {
+		const char* user = json_object_get_string(j_user);
+		if (user != NULL) {
+			size_t length = strlen(user);
+			if (length > 63) {
+				length = 63;
+			}
+			memcpy(config.cloudlogging.user, user, length);
+		}
+	}
+
+	json_object *j_pass = json_object_object_get(j_cloudlogging, "pass");
+	if (j_pass != NULL) {
+		const char* pass = json_object_get_string(j_pass);
+		if (pass != NULL) {
+			size_t length = strlen(pass);
+			if (length > 63) {
+				length = 63;
+			}
+			memcpy(config.cloudlogging.pass, pass, length);
+		}
+	}
+}
+
 void
 config_print(void)
 {
@@ -257,6 +346,13 @@ config_print(void)
 		printf(" '%s'", d->domain);
 	}
 	printf("\n");
+
+	printf(">> cloudlogging {\n");
+	printf(">>   auth: %s\n", config.cloudlogging.auth);
+	printf(">>   addr: %s\n", config.cloudlogging.addr);
+	printf(">>   user: %s\n", config.cloudlogging.user);
+	printf(">>   pass: %s\n", config.cloudlogging.pass);
+	printf(">> }\n");
 }
 
 
