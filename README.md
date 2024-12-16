@@ -23,6 +23,7 @@ intended for personal use, but can easily be made production-ready
 | --------------------- | -------------------------------------------- |
 | uwebfilter.d          | packet processing daemon                     |
 | uwebfilter.server     | web server for uwebfilter.d to query         |
+| uwebfilter.logcollect | cloud server to collect logs                 |
 | uwebfilter.database   | postgres & redis                             |
 | uwebfilter.scraper    | scrape websites and update db                |
 | uwebfilter.categorify | ml model to categorize contents of a website |
@@ -35,5 +36,4 @@ intended for personal use, but can easily be made production-ready
  - [ ] category & application based rate limiting
  - [ ] web interface to easily manage uwebfilterd's config
  - [ ] web interface to easily manage databases
- - [ ] cloud server to collect logs from devices (cloud logging)
  - [ ] proxy servers for scraping websites
