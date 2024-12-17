@@ -59,7 +59,8 @@ static struct {
 	size_t applications_length;
 	application_t *applications;
 
-	domain_t *domains;
+	domain_t *domains_blacklist;
+	domain_t *domains_whitelist;
 
 	struct {
 		char auth[SERVERADDR_LENGTH];
@@ -76,7 +77,8 @@ static struct {
 	.applications_length = 0,
 	.applications = NULL,
 
-	.domains = NULL
+	.domains_blacklist = NULL,
+	.domains_whitelist = NULL
 };
 
 
@@ -111,7 +113,8 @@ config_get_cloudlogging_pass(void)
 static void config_load_serveraddr(json_object *j_serveraddr);
 static void config_load_categories(json_object *j_categories);
 static void config_load_applications(json_object *j_applications);
-static void config_load_domains(json_object *j_domains);
+static void config_load_domains_blacklist(json_object *j_domains);
+static void config_load_domains_whitelist(json_object *j_domains);
 static void config_load_cloudlogging(json_object *j_cloudlogging);
 
 void
@@ -138,8 +141,12 @@ config_load(const char* config_path)
 		json_object_object_get(root, "applications")
 	);
 
-	config_load_domains(
-		json_object_object_get(root, "domains")
+	config_load_domains_blacklist(
+		json_object_object_get(root, "domains_blacklist")
+	);
+
+	config_load_domains_whitelist(
+		json_object_object_get(root, "domains_whitelist")
 	);
 
 	config_load_cloudlogging(
@@ -238,30 +245,58 @@ config_load_applications(json_object *j_applications)
 }
 
 static void
-config_load_domains(json_object *j_domains)
+config_load_domains_blacklist(json_object *j_domains_blacklist)
 {
-	if (j_domains == NULL) {
+	if (j_domains_blacklist == NULL) {
 		return;
 	}
 
-	int domains_length = json_object_array_length(j_domains);
+	int domains_length = json_object_array_length(j_domains_blacklist);
 	if (domains_length <= 0) {
 		return;
 	}
 
 	for (int i = 0; i < domains_length; i++) {
-		json_object *j_domain = json_object_array_get_idx(j_domains, i);
-		if (j_domain == NULL) {
+		json_object *j_domain_blacklist = json_object_array_get_idx(j_domains_blacklist, i);
+		if (j_domains_blacklist == NULL) {
 			continue;
 		}
 
-		const char* domain = json_object_get_string(j_domain);
-		domain_t *d = domain_create(domain);
+		const char* domain_blacklist = json_object_get_string(j_domain_blacklist);
+		domain_t *d = domain_create(domain_blacklist);
 		if (d == NULL) {
 			continue;
 		}
 
-		HASH_ADD_STR(config.domains, domain, d);
+		HASH_ADD_STR(config.domains_blacklist, domain, d);
+	}
+}
+
+static void
+config_load_domains_whitelist(json_object *j_domains_whitelist)
+{
+	if (j_domains_whitelist == NULL) {
+		return;
+	}
+
+	int domains_length = json_object_array_length(j_domains_whitelist);
+	if (domains_length <= 0) {
+		return;
+	}
+
+	for (int i = 0; i < domains_length; i++) {
+		json_object *j_domain_whitelist = json_object_array_get_idx(j_domains_whitelist, i);
+		if (j_domain_whitelist == NULL) {
+			continue;
+		}
+
+		const char* domain_whitelist = json_object_get_string(j_domain_whitelist);
+		domain_t *d = domain_create(domain_whitelist);
+		if (d == NULL) {
+			continue;
+		}
+
+		HASH_ADD_STR(config.domains_whitelist, domain, d);
 	}
 }
 
@@ -340,9 +375,15 @@ config_print(void)
 	}
 	printf("\n");
 
-	printf(">> domains:");
+	printf(">> domains_blacklist:");
 	domain_t *d, *tmp;
-	HASH_ITER(hh, config.domains, d, tmp) {
+	HASH_ITER(hh, config.domains_blacklist, d, tmp) {
+		printf(" '%s'", d->domain);
+	}
+	printf("\n");
+
+	printf(">> domains_whitelist:");
+	HASH_ITER(hh, config.domains_whitelist, d, tmp) {
 		printf(" '%s'", d->domain);
 	}
 	printf("\n");
@@ -395,16 +436,15 @@ config_is_application_blocked(const int appid)
 	return false;
 }
 
-/*
- * is the domain (or any of its subdomains) blocked by user
- */
-bool
-config_is_domain_blocked(const char domain[DOMAIN_LENGTH])
+
+
+static bool
+config_domain_lookup(domain_t *domains, const char domain[DOMAIN_LENGTH])
 {
 	const char *ptr = domain;
 	for (;;) {
 		domain_t *d = NULL;
-		HASH_FIND_STR(config.domains, ptr, d);
+		HASH_FIND_STR(domains, ptr, d);
 
 		if (d != NULL) {    /*  domain exists  */
 			return true;
@@ -418,4 +458,21 @@ config_is_domain_blocked(const char domain[DOMAIN_LENGTH])
 	}
 
 	return false;
+}
+/*
+ * is the domain (or any of its subdomains) blacklisted by user
+ */
+bool
+config_is_domain_blacklisted(const char domain[DOMAIN_LENGTH])
+{
+	return config_domain_lookup(config.domains_blacklist, domain);
+}
+
+/*
+ * is the domain (or any of its subdomains) whitelisted by user
+ */
+bool
+config_is_domain_whitelisted(const char domain[DOMAIN_LENGTH])
+{
+	return config_domain_lookup(config.domains_whitelist, domain);
 }

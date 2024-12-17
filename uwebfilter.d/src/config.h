@@ -20,7 +20,9 @@ const char* config_get_cloudlogging_pass(void);
 bool config_is_category_blocked(const int category);
 /*  is the application blocked by user  */
 bool config_is_application_blocked(const int appid);
-/*  is the domain (or any of its subdomains) blocked by user  */
-bool config_is_domain_blocked(const char domain[DOMAIN_LENGTH]);
+/*  is the domain (or any of its subdomains) blacklisted by user  */
+bool config_is_domain_blacklisted(const char domain[DOMAIN_LENGTH]);
+/*  is the domain (or any of its subdomains) whitelisted by user  */
+bool config_is_domain_whitelisted(const char domain[DOMAIN_LENGTH]);
 
 #endif

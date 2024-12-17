@@ -19,6 +19,8 @@ check_access(uwebfilterlog_t *uwebfilterlog, const struct iphdr *iphdr)
 	 *   1. application
 	 *   2. category
 	 *   3. user defined domains
+	 *     a. blacklist
+	 *     b. whitelist
 	 */
 	bool access_granted = true;
 
@@ -40,12 +42,19 @@ check_access(uwebfilterlog_t *uwebfilterlog, const struct iphdr *iphdr)
 	}
 
 	if (access_granted) {
-		access_granted = !config_is_domain_blocked(uwebfilterlog->domain);
-		uwebfilterlog->blocktype = BLOCKTYPE_USER;
+		access_granted = !config_is_domain_blacklisted(uwebfilterlog->domain);
+		uwebfilterlog->blocktype = BLOCKTYPE_USER_BLACKLIST;
 	}
 
 	if (access_granted) {
 		uwebfilterlog->blocktype = BLOCKTYPE_NONE;
+	}
+
+	if (!access_granted) {
+		access_granted = config_is_domain_whitelisted(uwebfilterlog->domain);
+		if (access_granted) {
+			uwebfilterlog->blocktype = BLOCKTYPE_USER_WHITELIST;
+		}
 	}
 
 	uwebfilterlog->logtime = time(NULL);
