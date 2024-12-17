@@ -4,6 +4,23 @@
 web filter daemon
 
 
+    config
+--------------
+    serveraddr:                 endpoint to query domain info
+    categories:                 list of blocked category ids
+    applications:               list of blocked application ids
+    domains_blacklist:          domains that are blacklisted
+    domains_whitelist:          domains that are whitelisted
+    cloudlogging: {             cloud logging info
+        auth:                       authentication endpoint
+        addr:                       log ingestion endpoint
+        user:                       username
+        pass:                       password
+    }
+
+
+
+
     shortcomings
 --------------------
   1. QUIC
