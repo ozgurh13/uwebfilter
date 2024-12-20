@@ -4,6 +4,18 @@
 web filter daemon
 
 
+for openwrt:
+    - make tarball and move into $OPENWRT_SOURCE_DIR/dl/
+        # cp -r src openwrt/uwebfilterd-1.0.0
+        # tar czvf uwebfilterd-1.0.0.tar.gz openwrt/uwebfilterd-1.0.0
+    - move openwrt/Makefile into $OPENWRT_SOURCE_DIR/package/...
+
+openwrt TODO:
+    - add uwebfilterd.cfg to tarball
+    - make procd service
+
+
+
     config
 --------------
     serveraddr:                 endpoint to query domain info

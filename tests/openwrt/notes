@@ -1,0 +1,36 @@
+docker run --rm -it ubuntu:24.04
+
+apt update
+apt install -y                                                \
+    git make gawk gcc rsync unzip wget bzip2 g++ file         \
+    libncurses-dev python3 python3-setuptools libelf-dev
+
+cd /root/
+git clone https://git.openwrt.org/openwrt/openwrt.git source
+
+cd source
+git checkout v23.05.5
+
+./scripts/feeds update -a
+./scripts/feeds install -a
+
+if root:   # this is for compiling in docker
+	export FORCE_UNSAFE_CONFIGURE=1
+
+# make uwebfilterd-1.0.0.tar.gz
+#   cp -r uwebfilter.d/src uwebfilter.d/openwrt/uwebfilterd-1.0.0
+#   tar czvf uwebfilterd-1.0.0.tar.gz uwebfilter.d/openwrt/uwebfilterd-1.0.0
+
+# move
+#   `uwebfilter-1.0.0.tar.gz` into `source/dl`
+#   `Makefile` into `source/package/network/utils/uwebfilterd/
+
+# configure image
+# select `Network > Firewall > uwebfilterd`
+make menuconfig
+make toolchain/install V=sscc -j$(nproc)
+
+# to make the entire image
+make V=sscc -j$(nproc)
+# to just make uwebfilterd
+make V=sscc -j$(nproc) package/network/utils/uwebfilterd/compile
