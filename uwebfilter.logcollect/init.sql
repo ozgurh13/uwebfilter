@@ -1,17 +1,29 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-
-
 CREATE DATABASE logsdb;
 \c logsdb;
 
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
 
 CREATE TABLE IF NOT EXISTS users (
 	_id           UUID PRIMARY KEY DEFAULT uuid_generate_v4 (),
-	username      TEXT NOT NULL CHECK (username <> ''),
-	password      TEXT NOT NULL CHECK (password <> '')
+	username      TEXT NOT NULL UNIQUE CHECK (username <> ''),
+	password      TEXT NOT NULL CHECK (password <> ''),
+	created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE OR REPLACE FUNCTION fn_users_create(username TEXT, passwd TEXT)
+	RETURNS UUID
+	RETURNS NULL ON NULL INPUT
+	LANGUAGE SQL
+	SECURITY DEFINER
+AS $$
+	INSERT INTO users (username, password)
+	VALUES (username, crypt(passwd, gen_salt('bf')))
+	RETURNING _id
+$$;
+
 
 CREATE OR REPLACE FUNCTION fn_users_authenticate(username TEXT, passwd TEXT)
 	RETURNS TEXT
