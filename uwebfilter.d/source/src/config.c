@@ -178,8 +178,6 @@ static void
 config_load_categories(json_object *j_categories)
 {
 	if (j_categories == NULL) {
-		/*  if this returns NULL, there isn't much we can do  */
-		config.categories = calloc(1, sizeof(category_t));
 		return;
 	}
 
@@ -213,8 +211,6 @@ static void
 config_load_applications(json_object *j_applications)
 {
 	if (j_applications == NULL) {
-		/*  if this returns NULL, there isn't much we can do  */
-		config.applications = calloc(1, sizeof(application_t));
 		return;
 	}
 

@@ -27,7 +27,7 @@ packet_handle_tcp80(uwebfilterlog_t *uwebfilterlog, const packet_info_t *packet_
 	const struct iphdr *iphdr = (const struct iphdr *) packet;
 	const struct tcphdr *tcphdr = (const struct tcphdr *) (packet + (iphdr->ihl << 2));
 
-	const unsigned char *payload = (const unsigned char *)tcphdr + (tcphdr->th_off * 4);
+	const unsigned char *payload = (const unsigned char *) tcphdr + (tcphdr->th_off * 4);
 	const uint16_t payload_length = ntohs(iphdr->tot_len) - (tcphdr->th_off * 4) - (iphdr->ihl * 4);
 
 	if (payload_length < 10) {    /*  packet too short  */
