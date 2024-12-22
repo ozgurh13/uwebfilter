@@ -1,7 +1,3 @@
-# TODO:
-#     - copy over config file to /etc/uwebfilterd/config
-#     - make procd file for service
-
 include $(TOPDIR)/rules.mk
 
 PKG_NAME       :=  uwebfilterd
@@ -23,6 +19,12 @@ endef
 define Package/uwebfilterd/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/uwebfilterd $(1)/usr/bin/
+
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/uwebfilterd $(1)/etc/init.d/
+
+	$(INSTALL_DIR) $(1)/etc/uwebfilterd
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/config $(1)/etc/uwebfilterd/
 endef
 
 $(eval $(call BuildPackage,uwebfilterd))

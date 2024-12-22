@@ -1,0 +1,7 @@
+Package: uwebfilterd
+Version: 1.0.0
+Description: filters DNS & HTTP/S traffic
+Maintainer: Hüseyin Özgür
+Homepage: https://github.com/ozgurh13/uwebfilter
+Architecture: amd64
+Depends: libnetfilter-queue-dev, libmnl-dev, libnfnetlink-dev, libcurl-dev, libjson-c-dev, libsqlite3-dev

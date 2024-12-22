@@ -11,9 +11,5 @@ LDLIBS += -lcurl -ljson-c -lsqlite3
 
 CFILES = src/*.c
 
-
 all:
 	$(CC) $(CFLAGS) $(CFILES) -o $(OUT) $(LDLIBS)
-
-clean:
-	rm -f $(OUT)

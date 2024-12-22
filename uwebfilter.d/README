@@ -4,18 +4,6 @@
 web filter daemon
 
 
-for openwrt:
-    - make tarball and move into $OPENWRT_SOURCE_DIR/dl/
-        # cp -r src openwrt/uwebfilterd-1.0.0
-        # tar czvf uwebfilterd-1.0.0.tar.gz openwrt/uwebfilterd-1.0.0
-    - move openwrt/Makefile into $OPENWRT_SOURCE_DIR/package/...
-
-openwrt TODO:
-    - add uwebfilterd.cfg to tarball
-    - make procd service
-
-
-
     config
 --------------
     serveraddr:                 endpoint to query domain info
@@ -54,11 +42,43 @@ openwrt TODO:
   + upx (optional)
 
 
+
+    packaging
+-----------------
+TODO: add debian (.deb) instructions
+
+
+
     build and install
 -------------------------
-make
 
-make install-config
-sudo make install
-# add `/home/.../.config/uwebfilterd/config` to `ExecStart` in uwebfilterd.service
-sudo make install-service
+openwrt:
+	1. cp -r source uwebfilterd-1.0.0
+	2. cp openwrt/uwebfilterd uwebfilterd-1.0.0/
+	3. cp uwebfilterd.cfg uwebfilterd-1.0.0/config
+	4. tar czvf uwebfilterd-1.0.0.tar.gz uwebfilterd-1.0.0
+	5. cp uwebfilterd-1.0.0.tar.gz $OPENWRT_SOURCE_DIR/dl
+	6. mkdir -p Makefile $OPENWRT_SOURCE_DIR/package/network/utils/uwebfilterd
+	7. cp openwrt/Makefile $OPENWRT_SOURCE_DIR/package/network/utils/uwebfilterd
+
+
+linux:
+	1. make
+	2. (optional) upx --best --ultra-brute uwebfilterd
+	3. sudo make install
+
+
+nftables:
+	add rules from nftrules to nftables ruleset
+
+
+config:
+	can be placed anywhere desired
+	needs to passed as an arg to uwebfilterd
+
+
+systemd:
+	add `/path/to/config` to `ExecStart` in systemd/uwebfilterd.service
+	1. cp uwebfilterd.service /etc/systemd/system/
+	2. systemctl enable uwebfilterd
+	3. systemctl start uwebfilterd
