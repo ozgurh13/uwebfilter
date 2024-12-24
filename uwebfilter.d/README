@@ -45,7 +45,11 @@ web filter daemon
 
     packaging
 -----------------
-TODO: add debian (.deb) instructions
+debian:
+	1. make -C source
+	2. mkdir -p debian/usr/bin
+	3. cp source/uwebfilterd debian/usr/bin
+	4. dpkg -b debian uwebfilterd-1.0.0_amd64.deb
 
 
 

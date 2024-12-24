@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+
+systemctl enable uwebfilterd.service
+systemctl start uwebfilterd.service
+
+exit 0

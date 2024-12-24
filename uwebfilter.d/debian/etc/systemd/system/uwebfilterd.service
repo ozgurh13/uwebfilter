@@ -1,0 +1,10 @@
+[Unit]
+Description=uwebfilterd
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/uwebfilterd /etc/uwebfilterd/config
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

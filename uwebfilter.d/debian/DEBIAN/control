@@ -4,4 +4,4 @@ Description: filters DNS & HTTP/S traffic
 Maintainer: Hüseyin Özgür
 Homepage: https://github.com/ozgurh13/uwebfilter
 Architecture: amd64
-Depends: libnetfilter-queue-dev, libmnl-dev, libnfnetlink-dev, libcurl-dev, libjson-c-dev, libsqlite3-dev
+Depends: libnetfilter-queue-dev, libmnl-dev, libnfnetlink-dev, libcurl4-openssl-dev|libcurl4-gnutls-dev|libcurl4-nss-dev, libjson-c-dev, libsqlite3-dev
