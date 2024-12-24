@@ -4,7 +4,7 @@ CREATE DATABASE domainsdb;
 
 CREATE TABLE IF NOT EXISTS categories (
 	id INTEGER PRIMARY KEY,
-	name TEXT NOT NULL CHECK (name <> '')
+	name TEXT NOT NULL UNIQUE CHECK (name <> '')
 );
 INSERT INTO categories VALUES
 	(0, 'unknown');
@@ -12,7 +12,7 @@ INSERT INTO categories VALUES
 
 CREATE TABLE IF NOT EXISTS application (
 	id INTEGER PRIMARY KEY,
-	name TEXT NOT NULL CHECK (name <> '')
+	name TEXT NOT NULL UNIQUE CHECK (name <> '')
 );
 INSERT INTO application VALUES
 	(0, 'unknown');
