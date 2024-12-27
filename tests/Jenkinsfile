@@ -1,0 +1,136 @@
+pipeline {
+    agent any
+
+    tools {
+        go 'go1.23.4'
+    }
+
+    environment {
+        GO111MODULE = 'on'
+        CGO_ENABLED = 0
+        GOPATH = "${WORKSPACE}/.gopath"
+    }
+
+    stages {
+        stage('Preliminary') {
+            steps {
+                sh '''
+                    docker --version
+                    go version
+                    gcc --version
+                    upx --version
+                    dpkg --version
+                '''
+            }
+        }
+
+        stage('Git Checkout') {
+            steps {
+                git 'https://github.com/ozgurh13/uwebfilter'
+            }
+        }
+
+        stage('Setup') {
+            parallel {
+                stage('uwebfilter.server') {
+                    steps {
+                        sh '''
+                            cd uwebfilter.server
+                            go mod tidy
+                        '''
+                    }
+                }
+                stage('uwebfilter.scraper') {
+                    steps {
+                        sh '''
+                            cd uwebfilter.scraper
+                            go mod tidy
+                        '''
+                    }
+                }
+                stage('uwebfilter.logcollect') {
+                    steps {
+                        sh '''
+                            cd uwebfilter.logcollect
+                            go mod tidy
+                        '''
+                    }
+                }
+            }
+        }
+
+        // TODO: quality control: SonarQube
+
+        stage('Test') {
+            parallel {
+                stage('uwebfilter.server') {
+                    steps {
+                        sh '''
+                            cd uwebfilter.server
+                            go test ./...
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Build') {
+            parallel {
+                stage('uwebfilter.d') {
+                    steps {
+                        sh '''
+                            cd uwebfilter.d
+                            make -C source
+                            upx --best --ultra-brute source/uwebfilterd
+                        '''
+                    }
+                }
+
+                stage('uwebfilter.server') {
+                    steps {
+                        sh '''
+                            cd uwebfilter.server
+                            make
+                            upx --best --ultra-brute server
+                        '''
+                    }
+                }
+
+                stage('uwebfilter.logcollect') {
+                    steps {
+                        sh '''
+                            cd uwebfilter.logcollect
+                            make
+                            upx --best --ultra-brute logcollect
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Package') {
+            parallel {
+                stage('uwebfilter.d') {
+                    steps {
+                        sh '''
+                            cd uwebfilter.d
+                            mkdir -p debian/usr/bin
+                            cp source/uwebfilterd debian/usr/bin
+                            dpkg -b debian uwebfilterd-1.0.0_amd64.deb
+                        '''
+                    }
+                }
+                stage('uwebfilter.server') {
+                    steps {
+                        sh '''
+                            cd uwebfilter.server
+                            echo 'FROM scratch\nCOPY server /server\nCMD ["/server"]' > DockFile
+                            docker build -t server1 -f DockFile .
+                            docker save server1 | gzip --best > server1.tar.gz
+                        '''
+                    }
+                }
+            }
+        }
+    }
+}
