@@ -1,0 +1,65 @@
+# pkg create -o . -r uwebfilter.server -M uwebfilter.server/+MANIFEST -p uwebfilter.server/plist
+
+uwebfilter.server/
+  +MANIFEST
+  plist
+  usr/local/
+    bin/uwebfilter.server
+    rc.d/uwebfilter_server
+
+
+
+```
+CGO_ENABLED=0 GOOS=freebsd GOARCH=amd64              \
+        go build                                     \
+                -o server                            \
+                -trimpath                            \
+                -gcflags=all="-l -B"                 \
+                -ldflags="-w -s -buildid="           \
+                ./cmd/server/.
+```
+
+
+
+``` cat +MANIFEST
+name: uwebfilter.server
+version: "1.0.0"
+origin: uwebfilter/server
+comment: "uwebfilter.server"
+desc: <<EOD
+    uwebfilter.server
+    domain query server to uwebfilter project
+EOD
+arch: amd64
+maintainer: none
+www: https://github/ozgurh13/uwebfilter
+prefix: /
+```
+
+
+
+``` cat plist
+/usr/local/bin/uwebfilter.server
+/usr/local/etc/rc.d/uwebfilter_server
+```
+
+
+
+``` cat uwebfilter_server
+#!/bin/sh
+
+# PROVIDE: uwebfilter.server
+
+. /etc/rc.subr
+
+name="uwebfilter_server"
+procname=/usr/local/bin/uwebfilter.server
+command=/usr/sbin/daemon
+command_args="${procname}"
+
+load_rc_config $name
+rcvar=`set_rcvar`
+checkyesno ${rcvar}
+
+run_rc_command "$1"
+```
