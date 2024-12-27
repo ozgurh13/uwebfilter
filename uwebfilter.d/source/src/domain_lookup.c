@@ -114,6 +114,7 @@ domain_info_create(
 {
 	domain_info_t *domain_info = domain_info_allocate();
 	if (domain_info == NULL) {
+		logger_error("domain_info allocation failed");
 		return NULL;
 	}
 
@@ -176,8 +177,10 @@ domain_info_deallocate(domain_info_t *domain_info)
 
 
 
-#define    DOMAIN_INFO_CACHE_DEFAULT_TTL  (1 * 60)       /*  1 minute   */
-#define    DOMAIN_INFO_CACHE_GCINTERVAL   (5 * 60)       /*  5 minutes  */
+#define    DOMAIN_INFO_CACHE_GCINTERVAL             (5 * 60)         /*  5 minutes  */
+#define    DOMAIN_INFO_CACHE_DEFAULT_TTL            (1 * 60)         /*  1 minute   */
+#define    DOMAIN_INFO_CACHE_DEFAULT_CATEGORY             0          /*  unknown    */
+#define    DOMAIN_INFO_CACHE_DEFAULT_APPLICATION          0          /*  unknown    */
 
 typedef struct {
 	size_t size;
@@ -294,6 +297,21 @@ domain_lookup(
 	};
 
 	if (!domain_lookup_curl(&b, domain_request_payload) || b.obj == NULL) {
+		logger_error("curl lookup failed: %s", domain_request->domain);
+
+		/*  insert with default values  */
+		domain_info = domain_info_create(
+			domain_request->domain,
+			DOMAIN_INFO_CACHE_DEFAULT_APPLICATION,
+			DOMAIN_INFO_CACHE_DEFAULT_CATEGORY,
+			now + DOMAIN_INFO_CACHE_DEFAULT_TTL
+		);
+		if (domain_info == NULL) {
+			return;
+		}
+
+		domain_info_cache_insert(&domain_info_cache, domain_info);
+
 		return;
 	}
 
