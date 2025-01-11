@@ -39,6 +39,6 @@ func setupApp(app *fiber.App) {
 func setupRoutesV1(app *fiber.App) {
 	v1 := app.Group("/v1")
 
-	v1.Post("/auth", controller.Auth)
+	v1.Post("/auth", middleware.AuthRateLimit, controller.Auth)
 	v1.Post("/ingest", middleware.JWTAuth, controller.IngestPOST)
 }
