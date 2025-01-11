@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"log/slog"
 	"time"
 
 	config "uwebfilter.logcollect/pkg/config"
@@ -17,6 +18,12 @@ func Auth(ctx *fiber.Ctx) error {
 			Pass string `json:"password"`
 		}{}
 	)
+
+	// all requests should take 1 second to respond
+	timeout := time.After(1 * time.Second)
+	defer func() {
+		<-timeout
+	}()
 
 	if err := ctx.BodyParser(&authRequest); err != nil {
 		return ctx.SendStatus(fiber.StatusUnauthorized)
@@ -40,6 +47,7 @@ func Auth(ctx *fiber.Ctx) error {
 	jwtSecret := config.GetJWTSecret()
 	jwtToken, err := token.SignedString(jwtSecret)
 	if err != nil {
+		slog.Error("token.SignedString", "error", err.Error())
 		return ctx.SendStatus(fiber.StatusInternalServerError)
 	}
 
