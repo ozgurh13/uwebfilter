@@ -27,7 +27,7 @@ var (
 )
 
 func init() {
-	if err := godotenv.Load("files/.env"); err != nil {
+	if err := godotenv.Load("/etc/uwebfilter.logcollect/config"); err != nil {
 		log.Fatal(err)
 	}
 
@@ -46,7 +46,7 @@ func init() {
 func getOrFatal(key string) string {
 	value := os.Getenv(key)
 	if value == "" {
-		log.Fatalf(".env: %s isn't set", key)
+		log.Fatalf("config: %s isn't set", key)
 	}
 	return value
 }
