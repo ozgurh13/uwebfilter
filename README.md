@@ -8,8 +8,6 @@ a small webfilter project
  - scrapes websites & categorizes them using machine learning
 
 
-intended for personal use, but can easily be made production-ready
-
 
   architecture
 ----------------
