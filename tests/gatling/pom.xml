@@ -4,8 +4,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.gatling.demo</groupId>
-  <artifactId>uwebfilter.server</artifactId>
-  <version>3.13.1</version>
+  <artifactId>uwebfilter</artifactId>
+  <version>3.13.5</version>
 
   <properties>
     <maven.compiler.release>11</maven.compiler.release>
