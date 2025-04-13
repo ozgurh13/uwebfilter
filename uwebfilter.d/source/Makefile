@@ -13,3 +13,6 @@ CFILES = src/*.c
 
 all:
 	$(CC) $(CFLAGS) $(CFILES) -o $(OUT) $(LDLIBS)
+
+clean:
+	$(RM) $(OUT)
