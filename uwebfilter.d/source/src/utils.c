@@ -70,5 +70,5 @@ ipaddr_uint32_to_string(char ipaddr[IPADDR_LENGTH], uint32_t u32_ipaddr)
 	index = uint_to_string(ipaddr, u32_ip3, index);
 	index = uint_to_string(ipaddr, u32_ip2, index);
 	index = uint_to_string(ipaddr, u32_ip1, index);
-	ipaddr[--index] = '\0';
+	ipaddr[index - 1] = '\0';
 }

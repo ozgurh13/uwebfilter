@@ -22,7 +22,7 @@ check_access(uwebfilterlog_t *uwebfilterlog, const struct iphdr *iphdr)
 	 *     a. blacklist
 	 *     b. whitelist
 	 */
-	bool access_granted = true;
+	bool access_granted;
 
 	domain_request_t domain_request = {
 		.domain = uwebfilterlog->domain
