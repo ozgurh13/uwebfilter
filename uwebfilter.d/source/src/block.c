@@ -64,7 +64,7 @@ dns_answer_send(const uint8_t *packet)
 
 	const struct iphdr *ip = (const struct iphdr*) packet;
 	const struct udphdr *udp = (const struct udphdr*) (packet + ip->ihl * 4);
-	const struct dnshdr *dns = (const struct dnshdr*)(packet + ip->ihl * 4 + sizeof(struct udphdr));
+	const struct dnshdr *dns = (const struct dnshdr*) (packet + ip->ihl * 4 + sizeof(struct udphdr));
 
 	const uint8_t *query = (const uint8_t*)
 		(packet + ip->ihl * 4 + sizeof(struct udphdr) + sizeof(struct dnshdr));

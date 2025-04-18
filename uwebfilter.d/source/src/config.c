@@ -78,7 +78,12 @@ static struct {
 	.applications = NULL,
 
 	.domains_blacklist = NULL,
-	.domains_whitelist = NULL
+	.domains_whitelist = NULL,
+
+	.cloudlogging.auth = {0},
+	.cloudlogging.addr = {0},
+	.cloudlogging.user = {0},
+	.cloudlogging.pass = {0}
 };
 
 
@@ -372,7 +377,7 @@ config_print(void)
 	printf("\n");
 
 	printf(">> domains_blacklist:");
-	domain_t *d, *tmp;
+	const domain_t *d, *tmp;
 	HASH_ITER(hh, config.domains_blacklist, d, tmp) {
 		printf(" '%s'", d->domain);
 	}

@@ -18,10 +18,10 @@ logs_send_to_cloud_server(const char* payload)
 	CURL *hnd;
 	struct curl_slist *slist1;
 
-	const char* authheader = authheader_get();
+	const char* authhdr = authheader_get();
 
 	slist1 = NULL;
-	slist1 = curl_slist_append(slist1, authheader);
+	slist1 = curl_slist_append(slist1, authhdr);
 	slist1 = curl_slist_append(slist1, "content-type: application/json");
 
 	const char* cloudlogging_addr = config_get_cloudlogging_addr();
@@ -56,7 +56,7 @@ logs_send_to_cloud_server(const char* payload)
 
 
 static json_object*
-uwebfilterlog_to_json_object(uwebfilterlog_t *uwebfilterlog)
+uwebfilterlog_to_json_object(const uwebfilterlog_t *uwebfilterlog)
 {
 	json_object *root = json_object_new_object();
 
@@ -108,9 +108,9 @@ logbuffer_init(void)
 }
 
 void
-_uwebfilterlog_sendto_cloud(uwebfilterlog_t *uwebfilterlog)
+_uwebfilterlog_sendto_cloud(const uwebfilterlog_t *uwebfilterlog)
 {
-	time_t now = uwebfilterlog->logtime;
+	const time_t now = uwebfilterlog->logtime;
 
 	json_object *log = uwebfilterlog_to_json_object(uwebfilterlog);
 	json_object_array_add(logbuffer.array, log);

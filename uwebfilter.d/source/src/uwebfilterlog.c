@@ -3,11 +3,11 @@
 #include "uwebfilterlog.h"
 
 
-void _uwebfilterlog_insert(uwebfilterlog_t *uwebfilterlog);
-void _uwebfilterlog_sendto_cloud(uwebfilterlog_t *uwebfilterlog);
+void _uwebfilterlog_insert(const uwebfilterlog_t *uwebfilterlog);
+void _uwebfilterlog_sendto_cloud(const uwebfilterlog_t *uwebfilterlog);
 
 void
-uwebfilterlog_write(uwebfilterlog_t *uwebfilterlog)
+uwebfilterlog_write(const uwebfilterlog_t *uwebfilterlog)
 {
 	_uwebfilterlog_insert(uwebfilterlog);
 
@@ -16,7 +16,7 @@ uwebfilterlog_write(uwebfilterlog_t *uwebfilterlog)
 
 
 void
-uwebfilterlog_print(uwebfilterlog_t *uwebfilterlog)
+uwebfilterlog_print(const uwebfilterlog_t *uwebfilterlog)
 {
 	printf(
 		"\n==========   LOG   ==========\n"

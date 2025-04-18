@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "defs.h"
 #include "config.h"
 #include "utils.h"
 #include "logger.h"
@@ -22,4 +21,6 @@ int main(int argc, char* argv[])
 	logger_set_loglevel(LOGLEVEL_DEBUG);
 
 	nfqueue_main();
+
+	logger_close();
 }

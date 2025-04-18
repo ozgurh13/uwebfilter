@@ -66,7 +66,7 @@ extract_dns_domain(char domain[DOMAIN_LENGTH], const uint8_t *packet, const size
 	const struct dnshdr *dnshdr = (const struct dnshdr*) packet;
 	const uint16_t qdcount = ntohs(dnshdr->qdcount);
 
-	if (qdcount <= 0) {
+	if (qdcount == 0) {
 		return false;
 	}
 
@@ -91,16 +91,15 @@ extract_dns_domain(char domain[DOMAIN_LENGTH], const uint8_t *packet, const size
 		dst += label_len;
 	}
 
-	size_t d_len = strlen(domain);
-	int dns_type = dns_question[d_len+3];
+	const size_t d_len = strlen(domain);
+	const uint8_t dns_type = dns_question[d_len+3];
 
-	if (dns_type < 0 || dns_type > 17) {
+	if (dns_type > 17) {
 		/*   TYPE HTTPS        TYPE IPV6      */
 		if (dns_type != 65 && dns_type != 28) {
 			return false;
 		}
 	}
-
 
 	return true;
 }

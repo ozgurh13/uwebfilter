@@ -57,7 +57,7 @@ db_init()
 }
 
 void
-_uwebfilterlog_insert(uwebfilterlog_t *uwebfilterlog)
+_uwebfilterlog_insert(const uwebfilterlog_t *uwebfilterlog)
 {
 	sqlite3_bind_text(stmt_insert,  1, uwebfilterlog->srcip,    -1, NULL);
 	sqlite3_bind_int (stmt_insert,  2, uwebfilterlog->srcport);

@@ -58,7 +58,7 @@ logger_write(
 	if (logger.active && loglevel >= logger.loglevel) {
 		time_t now = time(NULL);
 		char timefmt[20] = {0};
-		struct tm *tm = localtime(&now);
+		const struct tm *tm = localtime(&now);
 		strftime(timefmt, 20, "%Y.%m.%d %H:%M:%S", tm);
 
 		/*  ``YYYY.MM.DD HH:MM:SS [LOGLEVEL] | MESSAGE``  */

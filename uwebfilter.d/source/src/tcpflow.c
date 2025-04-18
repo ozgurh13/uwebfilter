@@ -16,7 +16,7 @@ static struct {
 } tcpflow_cache = {0};
 
 tcpflow_t*
-tcpflow_lookup(tcpflow_key_t *key)
+tcpflow_lookup(const tcpflow_key_t *key)
 {
 	tcpflow_t *tcpflow = NULL;
 	HASH_FIND(hh, tcpflow_cache.cache, key, tcpflow_key_len, tcpflow);
@@ -57,7 +57,7 @@ tcpflow_insert(tcpflow_t *tcpflow)
 }
 
 tcpflow_t*
-tcpflow_create(tcpflow_key_t *key, uint16_t expected)
+tcpflow_create(const tcpflow_key_t *key, const uint16_t expected)
 {
 	tcpflow_t *tcpflow = calloc(1, sizeof(tcpflow_t));
 	if (tcpflow == NULL) {

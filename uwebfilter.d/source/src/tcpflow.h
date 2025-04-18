@@ -33,7 +33,7 @@ typedef struct {
 	tcpflow_value_t value;
 } tcpflow_t;
 
-tcpflow_t *tcpflow_create(tcpflow_key_t *key, uint16_t expected);
+tcpflow_t *tcpflow_create(const tcpflow_key_t *key, const uint16_t expected);
 void tcpflow_free(tcpflow_t *flow);
 
 bool tcpflow_value_append(
@@ -46,7 +46,7 @@ bool tcpflow_value_append(
 bool tcpflow_iscomplete(tcpflow_t *tcpflow);
 void tcpflow_setverdict_and_free(tcpflow_t *tcpflow, int verdict);
 
-tcpflow_t *tcpflow_lookup(tcpflow_key_t *key);
+tcpflow_t *tcpflow_lookup(const tcpflow_key_t *key);
 void tcpflow_insert(tcpflow_t *tcpflow);
 
 #endif

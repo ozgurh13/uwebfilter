@@ -21,7 +21,7 @@ typedef struct {
 	time_t logtime;
 } uwebfilterlog_t;
 
-void uwebfilterlog_write(uwebfilterlog_t *uwebfilterlog);
-void uwebfilterlog_print(uwebfilterlog_t *uwebfilterlog);
+void uwebfilterlog_write(const uwebfilterlog_t *uwebfilterlog);
+void uwebfilterlog_print(const uwebfilterlog_t *uwebfilterlog);
 
 #endif

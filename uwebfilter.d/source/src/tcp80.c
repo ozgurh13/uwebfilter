@@ -107,9 +107,13 @@ extract_http_payload(
 	/*  extract PATH  */
 	const char *request_line_end = strstr(http_request, "\r\n");
 	if (request_line_end != NULL && request_line_end < http_request_end) {
-		const char *url_start = strchr(http_request, ' ') + 1;
+		const char *url_start_1 = strchr(http_request, ' ');
+		if (url_start_1 == NULL) {
+			return false;
+		}
+		const char *url_start = url_start_1 + 1;
 		const char *url_end = strchr(url_start, ' ');
-		if (url_start != NULL && url_end != NULL && url_end < request_line_end) {
+		if (url_end != NULL && url_end < request_line_end) {
 			const size_t url_length = url_end - url_start;
 			const size_t path_length =
 				(url_length < PATH_LENGTH) ? url_length : (PATH_LENGTH - 1);
