@@ -116,6 +116,7 @@ packet_handle_tcp443(uwebfilterlog_t *uwebfilterlog, const packet_info_t *packet
 
 	if (!tcpflow_value_append(&tcpflow->value, packet_info->id, payload, payload_length)) {
 		nfq_send_verdict(packet_info->id, NF_ACCEPT);
+		tcpflow_free(tcpflow);
 		return;
 	}
 
